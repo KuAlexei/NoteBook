@@ -3,11 +3,15 @@ package com.epam.ld.javabasics2_1.notebook;
 import com.epam.ld.javabasics2_1.notebook.entity.Note;
 import com.epam.ld.javabasics2_1.notebook.entity.NoteBook;
 import com.epam.ld.javabasics2_1.notebook.service.NoteBookService;
+import com.epam.ld.javabasics2_1.notebook.view.ConsoleNotePrinter;
+import com.epam.ld.javabasics2_1.notebook.view.INotePrinter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,6 +50,23 @@ class NoteBookTests {
         assertNotNull(nbService.getNotesForDay(LocalDate.of(2000,1,1)));
         nbService.deleteAllNotes();
         assertTrue(nbService.getAllNotes().size()==0);
+    }
+
+    @Test
+    void NoteBookConsoleView() {
+        INotePrinter notePrinter = new ConsoleNotePrinter();
+        NoteBook noteBook = NoteBookProvider.getInstance().getNoteBook();
+        NoteBookService nbService = new NoteBookService(noteBook);
+        assertAll("NoteBookConsoleView",
+                () -> assertDoesNotThrow(() -> notePrinter.print(noteBook), "Existing Notebook"),
+                () -> assertDoesNotThrow(() -> notePrinter.print(new NoteBook()), "Empty Notebook"),
+                () -> assertDoesNotThrow(() -> notePrinter.print((NoteBook) null), "Notebook is null"),
+                () -> assertDoesNotThrow(() -> notePrinter.print(nbService.getNotesForDay(LocalDate.now())), "Existing List of Notes"),
+                () -> assertDoesNotThrow(() -> notePrinter.print(new ArrayList<Note>()), "List of Notes is empty"),
+                () -> assertDoesNotThrow(() -> notePrinter.print((List<Note>) null), "List of Notes is null"),
+                () -> assertDoesNotThrow(() -> notePrinter.print(nbService.getNotesForDay(LocalDate.of(2000,1,1)).stream().findFirst().get()), "Existing Note"),
+                () -> assertDoesNotThrow(() -> notePrinter.print((Note) null), "Note is null")
+        );
     }
 
 }
