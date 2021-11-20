@@ -18,8 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class NoteBookTests {
     @BeforeAll
     static void beforeAll() {
-        NoteBook noteBook = NoteBookProvider.getInstance().getNoteBook();
-        NoteBookService nbService = new NoteBookService(noteBook);
+        NoteBookService nbService = new NoteBookService(0);
         nbService.addNote("Single line note!");
         nbService.addNote("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
         nbService.addNote(LocalDateTime.of(2000,1,1,0,0,59),"Happy 2000 YEAR!");
@@ -38,8 +37,7 @@ class NoteBookTests {
 
     @Test
     void NoteBookService() {
-        NoteBook noteBook = NoteBookProvider.getInstance().getNoteBook();
-        NoteBookService nbService = new NoteBookService(noteBook);
+        NoteBookService nbService = new NoteBookService(0);
         long size = nbService.getAllNotes().size();
         Note toDelete = nbService.addNote("Test Note to DELETE");
         assertEquals(size + 1, nbService.getAllNotes().size());
@@ -55,10 +53,9 @@ class NoteBookTests {
     @Test
     void NoteBookConsoleView() {
         INotePrinter notePrinter = new ConsoleNotePrinter();
-        NoteBook noteBook = NoteBookProvider.getInstance().getNoteBook();
-        NoteBookService nbService = new NoteBookService(noteBook);
+        NoteBookService nbService = new NoteBookService(0);
         assertAll("NoteBookConsoleView",
-                () -> assertDoesNotThrow(() -> notePrinter.print(noteBook), "Existing Notebook"),
+                () -> assertDoesNotThrow(() -> notePrinter.print(nbService.getNoteBook()), "Existing Notebook"),
                 () -> assertDoesNotThrow(() -> notePrinter.print(new NoteBook()), "Empty Notebook"),
                 () -> assertDoesNotThrow(() -> notePrinter.print((NoteBook) null), "Notebook is null"),
                 () -> assertDoesNotThrow(() -> notePrinter.print(nbService.getNotesForDay(LocalDate.now())), "Existing List of Notes"),

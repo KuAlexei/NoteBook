@@ -1,4 +1,4 @@
-package com.epam.ld.javabasics2_1.notebook;
+package com.epam.ld.javabasics2_1.notebook.repository;
 
 import com.epam.ld.javabasics2_1.notebook.entity.NoteBook;
 
@@ -27,6 +27,13 @@ public class NoteBookProvider {
 
     public NoteBook getNoteBook(int index) {
         return noteBooks.get(index);
+    }
+
+    public Integer addNoteBook(NoteBook noteBook) {
+        if(!noteBooks.contains(noteBook)) {
+            noteBooks.add(noteBook);
+        }
+        return noteBooks.indexOf(noteBook);
     }
 
 }
